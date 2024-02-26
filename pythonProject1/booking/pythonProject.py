@@ -1,45 +1,41 @@
-
-import booking.constants as const
 import os
 from selenium import webdriver
-# options = webdriver.ChromeOptions()
-# options.add_experimental_option("detach",True)
-# options.add_argument('--headless')
-# driver = webdriver.Chrome()
-class Booking(webdriver.Chrome()):
-    def __init__(self, driver_path=r"C:\Users\cvsri\Downloads\chrome-win32\chrome-win32\chrome_proxy.exe",
-                 teardown=False):
-        self.driver_path = driver_path
+from selenium.webdriver.common.by import By
+import booking.constants as const
+
+class Booking:
+    def __init__(self, teardown=False):
         self.teardown = teardown
-        os.environ['PATH'] += self.driver_path
-        super(Booking, self).__init__()
-        self.implicitly_wait(15)
-        self.maximize_window()
+
+        options = webdriver.ChromeOptions()
+        options.add_experimental_option("detach", True)
+        options.add_experimental_option('excludeSwitches', ['enable-logging'])
+
+        self.driver = webdriver.Chrome(options=options)
+
+        self.driver.implicitly_wait(15)
+        self.driver.maximize_window()
+
+    def __enter__(self):
+        return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         if self.teardown:
-            self.quit()
+            self.driver.quit()
 
     def land_first_page(self):
-        self.get(const.BASE_URL)
+        self.driver.get(const.BASE_URL)
 
-    # def change_currency(self, currency=None):
-    #     currency_element = self.find_element_by_css_selector(
-    #         'button[data-tooltip-text="Choose your currency"]'
-    #     )
-    #     currency_element.click()
-    #
-    #     selected_currency_element = self.find_element_by_css_selector(
-    #         f'a[data-modal-header-async-url-param*="selected_currency={currency}"]'
-    #     )
-    #     selected_currency_element.click()
-    #
-    # def select_place_to_go(self, place_to_go):
-    #     search_field = self.find_element_by_id('ss')
-    #     search_field.clear()
-    #     search_field.send_keys(place_to_go)
-    #
-    #     first_result = self.find_element_by_css_selector(
-    #         'li[data-i="0"]'
-    #     )
-    #     first_result.click()
+    def close_sing_in_option(self):
+        some = self.driver.find_element(By.XPATH, f"//button[@aria-label='{"Dismiss sign-in info."}']")
+        some.click()
+    #data-testid="header-currency-picker-trigger"
+    def change_currency(self, currency=None):
+        currency_element = self.driver.find_element(By.XPATH, f"//button[@data-testid='{"header-currency-picker-trigger"}']")
+        currency_element.click()
+
+        selected_currency_element = self.driver.find_element(By.XPATH, f'//*[text()="{currency}"]')
+
+        selected_currency_element.click()
+
+
