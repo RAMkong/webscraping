@@ -32,10 +32,18 @@ class Booking:
     #data-testid="header-currency-picker-trigger"
     def change_currency(self, currency=None):
         currency_element = self.driver.find_element(By.XPATH, f"//button[@data-testid='{"header-currency-picker-trigger"}']")
-        currency_element.click()
 
-        selected_currency_element = self.driver.find_element(By.XPATH, f'//*[text()="{currency}"]')
+        button_text = self.driver.find_element(By.XPATH, '//div[@class="aca0ade214 aaf30230d9 c2931f4182 e7d9f93f4d faf8b5d9a5"]/span[@class="f419a93f12"]//span[.="INR"]').text.strip()
+        if button_text == currency:
+            pass
 
-        selected_currency_element.click()
+        if button_text != currency_element:
+            currency_element.click()
+            selected_currency_element = self.driver.find_element(By.XPATH, f'//*[text()="{currency}"]')
+            # print(selected_currency_element)
+            selected_currency_element.click()
+
+        # button_text1 = self.driver.find_element(By.XPATH, f'//*[text()="USD"]')
+
 
 
