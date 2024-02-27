@@ -34,9 +34,13 @@ class Booking:
         currency_element = self.driver.find_element(By.XPATH, f"//button[@data-testid='{"header-currency-picker-trigger"}']")
 
         button_text = self.driver.find_element(By.XPATH, '//div[@class="aca0ade214 aaf30230d9 c2931f4182 e7d9f93f4d faf8b5d9a5"]/span[@class="f419a93f12"]//span[.="INR"]').text.strip()
+        #xpath is found by POM builder(an extension in the browser)
+        #https://pombuilder.com/
+        #https://github.com/LogiGear/pombuilder.com/wiki/User-Guide
+
+        #this checks the currency if what we wanted is already set it doesnt do anything but if the currency is different it changes the currency
         if button_text == currency:
             pass
-
         if button_text != currency_element:
             currency_element.click()
             selected_currency_element = self.driver.find_element(By.XPATH, f'//*[text()="{currency}"]')
